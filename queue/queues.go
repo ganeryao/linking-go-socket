@@ -9,12 +9,12 @@ type (
 	}
 )
 
-var processQueue LkQueue
+var processQueue *LkQueue
 
-func SetProcessQueue(queue LkQueue) {
+func SetProcessQueue(queue *LkQueue) {
 	processQueue = queue
 }
 
-func GetProcessQueue() LkQueue {
+func GetProcessQueue() *LkQueue {
 	return processQueue
 }
