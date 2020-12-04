@@ -8,13 +8,3 @@ type (
 		PushMsg(*component.HandlerMsg)
 	}
 )
-
-var processQueue *LkQueue
-
-func SetProcessQueue(queue *LkQueue) {
-	processQueue = queue
-}
-
-func GetProcessQueue() *LkQueue {
-	return processQueue
-}
