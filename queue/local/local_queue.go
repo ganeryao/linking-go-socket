@@ -1,4 +1,4 @@
-package queue
+package local
 
 import (
 	"github.com/alecthomas/log4go"
@@ -10,16 +10,16 @@ import (
 var mainHandleQueue = common.GetQueue()
 var threadHandleQueue = common.GetQueue()
 
-type LocalQueue struct {
+type Queue struct {
 }
 
-func NewLocalQueue() *LocalQueue {
-	var h = &LocalQueue{}
+func NewQueue() *Queue {
+	var h = &Queue{}
 	h.init()
 	return h
 }
 
-func (h LocalQueue) init() {
+func (h Queue) init() {
 	// 1、1个主逻辑线程
 	go h.GetNextMsg(mainHandleQueue)
 	// 2、2个子逻辑线程
@@ -28,7 +28,7 @@ func (h LocalQueue) init() {
 	}
 }
 
-func (h LocalQueue) PushMsg(handleMsg *component.HandlerMsg) {
+func (h Queue) PushMsg(handleMsg *component.HandlerMsg) {
 	switch handleMsg.ApiType {
 	case common.ApiModeMain:
 		mainHandleQueue.Push(handleMsg)
@@ -42,7 +42,7 @@ func (h LocalQueue) PushMsg(handleMsg *component.HandlerMsg) {
 	}
 }
 
-func (h LocalQueue) GetNextMsg(queue *common.Queue) {
+func (h Queue) GetNextMsg(queue *common.Queue) {
 	for {
 		time.Sleep(time.Duration(2) * time.Second)
 		data, _ := queue.Pop()

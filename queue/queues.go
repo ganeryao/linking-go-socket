@@ -3,18 +3,18 @@ package queue
 import "github.com/ganeryao/linking-go-socket/component"
 
 type (
-	Queue interface {
+	LkQueue interface {
 		Init()
 		PushMsg(*component.HandlerMsg)
 	}
 )
 
-var processQueue Queue
+var processQueue LkQueue
 
-func SetProcessQueue(queue Queue) {
+func SetProcessQueue(queue LkQueue) {
 	processQueue = queue
 }
 
-func GetProcessQueue() Queue {
+func GetProcessQueue() LkQueue {
 	return processQueue
 }
