@@ -15,11 +15,11 @@ type LkQueue struct {
 
 func NewQueue() *LkQueue {
 	var h = &LkQueue{}
-	h.init()
+	h.Init()
 	return h
 }
 
-func (h LkQueue) init() {
+func (h LkQueue) Init() {
 	// 1、1个主逻辑线程
 	go h.GetNextMsg(mainHandleQueue)
 	// 2、2个子逻辑线程
