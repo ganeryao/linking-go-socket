@@ -10,16 +10,16 @@ import (
 var mainHandleQueue = common.GetQueue()
 var threadHandleQueue = common.GetQueue()
 
-type Queue struct {
+type LkQueue struct {
 }
 
-func NewQueue() *Queue {
-	var h = &Queue{}
+func NewQueue() *LkQueue {
+	var h = &LkQueue{}
 	h.init()
 	return h
 }
 
-func (h Queue) init() {
+func (h LkQueue) init() {
 	// 1、1个主逻辑线程
 	go h.GetNextMsg(mainHandleQueue)
 	// 2、2个子逻辑线程
@@ -28,7 +28,7 @@ func (h Queue) init() {
 	}
 }
 
-func (h Queue) PushMsg(handleMsg *component.HandlerMsg) {
+func (h LkQueue) PushMsg(handleMsg *component.HandlerMsg) {
 	switch handleMsg.ApiType {
 	case common.ApiModeMain:
 		mainHandleQueue.Push(handleMsg)
@@ -42,7 +42,7 @@ func (h Queue) PushMsg(handleMsg *component.HandlerMsg) {
 	}
 }
 
-func (h Queue) GetNextMsg(queue *common.Queue) {
+func (h LkQueue) GetNextMsg(queue *common.Queue) {
 	for {
 		time.Sleep(time.Duration(2) * time.Second)
 		data, _ := queue.Pop()
