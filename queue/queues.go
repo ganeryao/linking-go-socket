@@ -1,6 +1,6 @@
 package queue
 
-import "linking-go-socket/component"
+import "github.com/ganeryao/linking-go-socket/component"
 
 type (
 	Queue interface {

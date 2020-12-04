@@ -3,13 +3,13 @@ package socket
 import (
 	"context"
 	"fmt"
+	"github.com/ganeryao/linking-go-socket/services"
 	"github.com/spf13/viper"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/acceptor"
 	"github.com/topfreegames/pitaya/cluster"
 	"github.com/topfreegames/pitaya/component"
 	"github.com/topfreegames/pitaya/route"
-	"linking-go-socket/services"
 	"strings"
 )
 
@@ -40,7 +40,7 @@ func ConfigureFrontend(port int, dictionary ...string) {
 	var dict = make(map[string]uint16, 0)
 	num := len(dictionary)
 	if num > 0 {
-		for i  := 0; i < num; i++ {
+		for i := 0; i < num; i++ {
 			dict[dictionary[i]] = uint16(i)
 		}
 	}

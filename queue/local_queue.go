@@ -2,8 +2,8 @@ package queue
 
 import (
 	"github.com/alecthomas/log4go"
-	"linking-go-socket/common"
-	"linking-go-socket/component"
+	"github.com/ganeryao/linking-go-socket/common"
+	"github.com/ganeryao/linking-go-socket/component"
 	"time"
 )
 
