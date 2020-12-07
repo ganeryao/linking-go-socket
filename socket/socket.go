@@ -3,7 +3,6 @@ package socket
 import (
 	"context"
 	"fmt"
-	"github.com/ganeryao/linking-go-socket/queue"
 	"github.com/ganeryao/linking-go-socket/services"
 	"github.com/spf13/viper"
 	"github.com/topfreegames/pitaya"
@@ -13,16 +12,6 @@ import (
 	"github.com/topfreegames/pitaya/route"
 	"strings"
 )
-
-var processQueue queue.LkQueue
-
-func SetProcessQueue(queue queue.LkQueue) {
-	processQueue = queue
-}
-
-func GetProcessQueue() queue.LkQueue {
-	return processQueue
-}
 
 func ConfigureBackend(config *viper.Viper) {
 	room := services.NewRoom(config)

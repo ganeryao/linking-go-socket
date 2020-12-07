@@ -4,11 +4,11 @@ import (
 	"context"
 	lkCommon "github.com/ganeryao/linking-go-agile/common"
 	"github.com/ganeryao/linking-go-agile/protos"
+	"github.com/ganeryao/linking-go-socket/app"
 	"github.com/ganeryao/linking-go-socket/common"
 	lkComponent "github.com/ganeryao/linking-go-socket/component"
 	"github.com/ganeryao/linking-go-socket/manager"
 	"github.com/ganeryao/linking-go-socket/pojo/dto"
-	"github.com/ganeryao/linking-go-socket/socket"
 	"github.com/spf13/viper"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/component"
@@ -111,5 +111,5 @@ func (r *Room) Message(ctx context.Context, request *protos.LRequest) {
 	}
 	s := manager.GetSession(ctx)
 	// 开始处理请求
-	socket.GetProcessQueue().PushMsg(&lkComponent.HandlerMsg{Uid: s.UID(), ApiType: apiType, Req: request})
+	app.GetProcessQueue().PushMsg(&lkComponent.HandlerMsg{Uid: s.UID(), ApiType: apiType, Req: request})
 }
