@@ -18,10 +18,6 @@ import (
 	"time"
 )
 
-var (
-	GroupName = "room"
-)
-
 type (
 	// Room represents a component that contains a bundle of room related handler
 	// like Join/Message
@@ -48,13 +44,13 @@ func (r *Room) Init() {
 		panic(err)
 	}
 	pitaya.InitGroups(gsi)
-	_ = pitaya.GroupCreate(context.Background(), GroupName)
+	_ = pitaya.GroupCreate(context.Background(), app.DefaultGroupName)
 }
 
 // AfterInit component lifetime callback
 func (r *Room) AfterInit() {
 	r.timer = pitaya.NewTimer(time.Minute*5, func() {
-		count, err := pitaya.GroupCountMembers(context.Background(), GroupName)
+		count, err := pitaya.GroupCountMembers(context.Background(), app.DefaultGroupName)
 		println("UserCount: Time=>", time.Now().String(), "Count=>", count, "Error=>", err)
 	})
 }
@@ -74,19 +70,19 @@ func (r *Room) Join(ctx context.Context, request *protos.LRequest) (*protos.LRes
 		return nil, pitaya.Error(err, "RH-000", map[string]string{"failed": "bind"})
 	}
 	// 4、判断用户是否已经在组中，如果存在先删除，再加入
-	flag, err := pitaya.GroupContainsMember(ctx, GroupName, s.UID())
+	flag, err := pitaya.GroupContainsMember(ctx, app.DefaultGroupName, s.UID())
 	if err != nil {
 		logger.Error("Failed to contains room member: " + err.Error())
 		return nil, err
 	}
 	if flag {
-		err := pitaya.GroupRemoveMember(ctx, GroupName, s.UID())
+		err := pitaya.GroupRemoveMember(ctx, app.DefaultGroupName, s.UID())
 		if err != nil {
 			logger.Error("Failed to remove room member: " + err.Error())
 			return nil, err
 		}
 	}
-	err = pitaya.GroupAddMember(ctx, GroupName, s.UID())
+	err = pitaya.GroupAddMember(ctx, app.DefaultGroupName, s.UID())
 	if err != nil {
 		logger.Error("Failed to join room: " + err.Error())
 		return nil, err
@@ -100,7 +96,7 @@ func (r *Room) Message(ctx context.Context, request *protos.LRequest) {
 	logger := manager.GetLog(ctx)
 	var msgDTO = &dto.MsgDTO{}
 	lkCommon.ParseJson(request.Param, msgDTO)
-	err := pitaya.GroupBroadcast(ctx, "connector", "room", "onMessage", lkCommon.OfResultData(msgDTO.Msg))
+	err := pitaya.GroupBroadcast(ctx, app.DefaultFrontend, app.DefaultGroupName, app.DefaultOnMessageRoute, lkCommon.OfResultData(msgDTO.Msg))
 	if err != nil {
 		logger.Error("Error broadcasting message: " + err.Error())
 	}

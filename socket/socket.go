@@ -3,6 +3,7 @@ package socket
 import (
 	"context"
 	"fmt"
+	"github.com/ganeryao/linking-go-socket/app"
 	"github.com/ganeryao/linking-go-socket/services"
 	"github.com/spf13/viper"
 	"github.com/topfreegames/pitaya"
@@ -16,29 +17,30 @@ import (
 func ConfigureBackend(config *viper.Viper) {
 	room := services.NewRoom(config)
 	pitaya.Register(room,
-		component.WithName("room"),
+		component.WithName(app.DefaultGroupName),
 		component.WithNameFunc(strings.ToLower),
 	)
 
 	pitaya.RegisterRemote(room,
-		component.WithName("room"),
+		component.WithName(app.DefaultGroupName),
 		component.WithNameFunc(strings.ToLower),
 	)
 }
 
 func ConfigureFrontend(port int, dictionary ...string) {
 	pitaya.Register(&services.Connector{},
-		component.WithName("connector"),
+		component.WithName(app.DefaultFrontend),
 		component.WithNameFunc(strings.ToLower),
 	)
 	pitaya.RegisterRemote(&services.ConnectorRemote{},
-		component.WithName("connector_remote"),
+		component.WithName(app.DefaultFrontend+"_remote"),
 	)
-	AddRoute("chat")
-	AddRoute("room")
-
+	num := len(app.DefaultRoutes)
+	for i := 0; i < num; i++ {
+		AddRoute(app.DefaultRoutes[i])
+	}
 	var dict = make(map[string]uint16, 0)
-	num := len(dictionary)
+	num = len(dictionary)
 	if num > 0 {
 		for i := 0; i < num; i++ {
 			dict[dictionary[i]] = uint16(i)
