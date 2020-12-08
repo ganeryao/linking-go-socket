@@ -28,7 +28,7 @@ func (h LkQueue) Init() {
 	}
 }
 
-func (h LkQueue) PushMsg(handleMsg *component.HandlerMsg) {
+func (h LkQueue) PushMsg(handleMsg component.HandlerMsg) {
 	switch handleMsg.ApiType {
 	case common.ApiModeMain:
 		mainHandleQueue.Push(handleMsg)
