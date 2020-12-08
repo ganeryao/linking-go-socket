@@ -102,5 +102,5 @@ func (r *Room) Message(ctx context.Context, request *protos.LRequest) {
 	}
 	s := manager.GetSession(ctx)
 	// 开始处理请求
-	app.GetProcessQueue().PushMsg(&lkComponent.HandlerMsg{Uid: s.UID(), ApiType: apiType, Req: request})
+	app.GetProcessQueue().PushMsg(lkComponent.HandlerMsg{Uid: s.UID(), ApiType: apiType, Req: request})
 }
