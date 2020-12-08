@@ -8,9 +8,9 @@ import (
 
 var (
 	DefaultFrontend       = "connector"
-	DefaultGroupName      = "room"
+	DefaultGroupName      = "chain"
 	DefaultOnMessageRoute = "onMessage"
-	DefaultRoutes         = []string{"chat", "room"}
+	DefaultRoutes         = []string{"backed", "chain"}
 	processQueue          queue.LkQueue
 )
 

@@ -93,13 +93,8 @@ func (r *Room) Join(ctx context.Context, request *protos.LRequest) (*protos.LRes
 // Message sync last message to all members
 func (r *Room) Message(ctx context.Context, request *protos.LRequest) {
 	request.Api = common.ConvertApi(request.GetApi())
-	logger := manager.GetLog(ctx)
 	var msgDTO = &dto.MsgDTO{}
 	lkCommon.ParseJson(request.Param, msgDTO)
-	err := pitaya.GroupBroadcast(ctx, app.DefaultFrontend, app.DefaultGroupName, app.DefaultOnMessageRoute, lkCommon.OfResultData(msgDTO.Msg))
-	if err != nil {
-		logger.Error("Error broadcasting message: " + err.Error())
-	}
 	flag, apiType := common.ContainsApi(request.GetApi())
 	if !flag {
 		// 不是支持的api请求，直接抛弃
