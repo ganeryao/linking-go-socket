@@ -13,8 +13,8 @@ var threadHandleQueue = common.GetQueue()
 type LkQueue struct {
 }
 
-func NewQueue() *LkQueue {
-	var h = &LkQueue{}
+func NewQueue() LkQueue {
+	var h = LkQueue{}
 	h.Init()
 	return h
 }
