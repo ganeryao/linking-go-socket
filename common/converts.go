@@ -30,5 +30,5 @@ func ConvertHandlerMsg(request *protos.LRequest, uid string, data interface{}) (
 		// 不是支持的api请求，直接抛弃
 		return nil, lkError.NewError(constants.ErrUnsupportedRequest, lkError.ErrBadRequestCode)
 	}
-	return &module.HandlerMsg{Uid: uid, ApiType: apiType, Msg: data}, nil
+	return &module.HandlerMsg{Uid: uid, ApiType: apiType, Api: request.Api, Msg: data}, nil
 }
