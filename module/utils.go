@@ -3,6 +3,7 @@ package module
 import (
 	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-agile/common"
+	"github.com/ganeryao/linking-go-agile/errors"
 	"github.com/ganeryao/linking-go-agile/protos"
 	"github.com/topfreegames/pitaya/util"
 	"reflect"
@@ -28,8 +29,8 @@ func DoHandleMsg(msg HandlerMsg) (*protos.LResult, error) {
 	args := []reflect.Value{handler.Receiver, reflect.ValueOf(msg)}
 	ret, err := util.Pcall(handler.Method, args)
 	if err != nil {
-		_ = log4go.Error("=============" + err.Error())
-		return common.OfResultFail("123", err.Error()), err
+		_ = log4go.Error("DoHandleMsg=============" + err.Error())
+		return common.OfResultFail(msg.Api, errors.ErrInternalCode, err.Error()), err
 	}
 	if ret != nil {
 		return ret.(*protos.LResult), nil
