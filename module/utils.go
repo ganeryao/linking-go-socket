@@ -12,11 +12,12 @@ import (
 type HandlerMsg struct {
 	Uid     string
 	ApiType socketCommon.ApiProcessMode
-	Req     *protos.LRequest
+	Api     string
+	Msg     interface{}
 }
 
 func DoHandleMsg(msg HandlerMsg) (*protos.LResult, error) {
-	handler := handlers[msg.Req.Api]
+	handler := handlers[msg.Api]
 	args := []reflect.Value{handler.Receiver, reflect.ValueOf(msg)}
 	ret, err := util.Pcall(handler.Method, args)
 	if err != nil {
