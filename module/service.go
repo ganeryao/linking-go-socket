@@ -29,6 +29,11 @@ type (
 	}
 )
 
+func ContainsHandler(name string) bool {
+	_, ok := handlers[name]
+	return ok
+}
+
 func NewService(comp SelfComponent, opts []Option) *Service {
 	s := &Service{
 		Type:     reflect.TypeOf(comp),

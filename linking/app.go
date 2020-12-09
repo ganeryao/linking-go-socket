@@ -19,8 +19,6 @@ type App struct {
 	routes      []string
 	clientRoute string
 	queue       queue.LkQueue
-	mainApi     map[string]string
-	threadApi   map[string]string
 }
 
 var (
@@ -53,14 +51,6 @@ func Configure(
 	app.debug = debug
 }
 
-func ConfigureApi(
-	mainApi map[string]string,
-	threadApi map[string]string,
-) {
-	app.mainApi = mainApi
-	app.threadApi = threadApi
-}
-
 func GetFrontend() string {
 	return app.frontend
 }
@@ -83,26 +73,6 @@ func IsDebug() bool {
 
 func IsQueueProcess() bool {
 	return app.queue != nil
-}
-
-func ContainsApi(api string) (bool, module.ApiProcessMode) {
-	_, ok := app.mainApi[api]
-	if ok {
-		return true, module.ApiModeMain
-	}
-	_, ok = app.threadApi[api]
-	if ok {
-		return true, module.ApiModeThread
-	}
-	return false, module.ApiModeNone
-}
-
-func RetrieveApi(api string) (bool, string) {
-	fun, ok := app.mainApi[api]
-	if !ok {
-		fun, ok = app.threadApi[api]
-	}
-	return ok, fun
 }
 
 func HandleMsg(msg *module.HandlerMsg) {
