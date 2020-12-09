@@ -19,11 +19,7 @@ type SelfBase struct {
 	component.Base
 }
 
-func (b *SelfBase) Group() string {
-	return ""
-}
-
-func (b *SelfBase) InitGroup(conf *config.Config, clearUids bool) {
+func (b *SelfBase) InitGroup(conf *config.Config, group string, clearUids bool) {
 	var gsi groups.GroupService
 	var err error
 	if conf != nil {
@@ -36,12 +32,12 @@ func (b *SelfBase) InitGroup(conf *config.Config, clearUids bool) {
 	}
 	pitaya.InitGroups(gsi)
 	if clearUids {
-		_ = pitaya.GroupRemoveAll(context.Background(), b.Group())
+		_ = pitaya.GroupRemoveAll(context.Background(), group)
 	}
-	_ = pitaya.GroupCreate(context.Background(), b.Group())
+	_ = pitaya.GroupCreate(context.Background(), group)
 }
 
-func (b *SelfBase) JoinGroup(ctx context.Context, uid string) error {
+func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) error {
 	logger := manager.GetLog(ctx)
 	// 1、从ctx中获得session
 	s := manager.GetSession(ctx)
@@ -52,13 +48,13 @@ func (b *SelfBase) JoinGroup(ctx context.Context, uid string) error {
 		return pitaya.Error(err, "RH-000", map[string]string{"failed": "bind"})
 	}
 	// 3、判断用户是否已经在组中，如果不存在再加入
-	flag, err := pitaya.GroupContainsMember(ctx, b.Group(), uid)
+	flag, err := pitaya.GroupContainsMember(ctx, group, uid)
 	if err != nil {
 		logger.Error("Failed to contains room member: " + err.Error())
 		return err
 	}
 	if !flag {
-		err = pitaya.GroupAddMember(ctx, b.Group(), uid)
+		err = pitaya.GroupAddMember(ctx, group, uid)
 		if err != nil {
 			logger.Error("Failed to join room: " + err.Error())
 			return err
