@@ -12,7 +12,14 @@ import (
 
 func ConvertApi(api string) string {
 	a := strings.Split(api, ".")
-	return a[len(a)-2] + "." + a[len(a)-1]
+	num := len(a)
+	if num >= 3 {
+		return a[len(a)-3] + "." + a[len(a)-2] + "." + a[len(a)-1]
+	} else if num >= 2 {
+		return a[len(a)-2] + "." + a[len(a)-1]
+	} else {
+		panic("ConvertApi api len error" + api)
+	}
 }
 
 func ConvertHandlerMsg(request *protos.LRequest, uid string, data interface{}) (*module.HandlerMsg, *lkError.Error) {

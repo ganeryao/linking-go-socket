@@ -1,7 +1,10 @@
 package linking
 
 import (
+	"encoding/json"
+	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-socket/common"
+	"github.com/ganeryao/linking-go-socket/module"
 	"github.com/ganeryao/linking-go-socket/queue"
 	"github.com/spf13/viper"
 	"github.com/topfreegames/pitaya"
@@ -101,6 +104,18 @@ func RetrieveApi(api string) (bool, string) {
 		fun, ok = app.threadApi[api]
 	}
 	return ok, fun
+}
+
+func HandleMsg(msg *module.HandlerMsg) {
+	if IsQueueProcess() {
+		GetQueue().PushMsg(*msg)
+	} else {
+		_, err := module.DoHandleMsg(*msg)
+		if err != nil {
+			b, _ := json.Marshal(msg)
+			_ = log4go.Error("HandleMsg error=========msg:"+string(b), err)
+		}
+	}
 }
 
 func SendUserMsg(uid string, v interface{}) error {
