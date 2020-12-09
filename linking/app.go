@@ -85,24 +85,16 @@ func IsQueueProcess() bool {
 	return app.queue != nil
 }
 
-type ApiProcessMode string
-
-const (
-	ApiModeMain   ApiProcessMode = "Main"
-	ApiModeThread ApiProcessMode = "Thread"
-	ApiModeNone   ApiProcessMode = "None"
-)
-
-func ContainsApi(api string) (bool, ApiProcessMode) {
+func ContainsApi(api string) (bool, module.ApiProcessMode) {
 	_, ok := app.mainApi[api]
 	if ok {
-		return true, ApiModeMain
+		return true, module.ApiModeMain
 	}
 	_, ok = app.threadApi[api]
 	if ok {
-		return true, ApiModeThread
+		return true, module.ApiModeThread
 	}
-	return false, ApiModeNone
+	return false, module.ApiModeNone
 }
 
 func RetrieveApi(api string) (bool, string) {

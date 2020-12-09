@@ -4,14 +4,21 @@ import (
 	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-agile/common"
 	"github.com/ganeryao/linking-go-agile/protos"
-	"github.com/ganeryao/linking-go-socket/linking"
 	"github.com/topfreegames/pitaya/util"
 	"reflect"
 )
 
+type ApiProcessMode string
+
+const (
+	ApiModeMain   ApiProcessMode = "Main"
+	ApiModeThread ApiProcessMode = "Thread"
+	ApiModeNone   ApiProcessMode = "None"
+)
+
 type HandlerMsg struct {
 	Uid     string
-	ApiType linking.ApiProcessMode
+	ApiType ApiProcessMode
 	Api     string
 	Msg     interface{}
 }
