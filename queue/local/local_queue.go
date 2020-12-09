@@ -3,6 +3,7 @@ package local
 import (
 	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-socket/common"
+	"github.com/ganeryao/linking-go-socket/linking"
 	"github.com/ganeryao/linking-go-socket/module"
 	"time"
 )
@@ -30,10 +31,10 @@ func (h LkQueue) Init() {
 
 func (h LkQueue) PushMsg(handleMsg module.HandlerMsg) {
 	switch handleMsg.ApiType {
-	case common.ApiModeMain:
+	case linking.ApiModeMain:
 		mainHandleQueue.Push(handleMsg)
 		break
-	case common.ApiModeThread:
+	case linking.ApiModeThread:
 		threadHandleQueue.Push(handleMsg)
 		break
 	default:

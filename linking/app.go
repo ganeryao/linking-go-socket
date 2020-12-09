@@ -3,7 +3,6 @@ package linking
 import (
 	"encoding/json"
 	"github.com/alecthomas/log4go"
-	"github.com/ganeryao/linking-go-socket/common"
 	"github.com/ganeryao/linking-go-socket/module"
 	"github.com/ganeryao/linking-go-socket/queue"
 	"github.com/spf13/viper"
@@ -86,16 +85,24 @@ func IsQueueProcess() bool {
 	return app.queue != nil
 }
 
-func ContainsApi(api string) (bool, common.ApiProcessMode) {
+type ApiProcessMode string
+
+const (
+	ApiModeMain   ApiProcessMode = "Main"
+	ApiModeThread ApiProcessMode = "Thread"
+	ApiModeNone   ApiProcessMode = "None"
+)
+
+func ContainsApi(api string) (bool, ApiProcessMode) {
 	_, ok := app.mainApi[api]
 	if ok {
-		return true, common.ApiModeMain
+		return true, ApiModeMain
 	}
 	_, ok = app.threadApi[api]
 	if ok {
-		return true, common.ApiModeThread
+		return true, ApiModeThread
 	}
-	return false, common.ApiModeNone
+	return false, ApiModeNone
 }
 
 func RetrieveApi(api string) (bool, string) {
