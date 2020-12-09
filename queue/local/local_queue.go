@@ -3,7 +3,7 @@ package local
 import (
 	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-socket/common"
-	"github.com/ganeryao/linking-go-socket/component"
+	"github.com/ganeryao/linking-go-socket/module"
 	"time"
 )
 
@@ -28,7 +28,7 @@ func (h LkQueue) Init() {
 	}
 }
 
-func (h LkQueue) PushMsg(handleMsg component.HandlerMsg) {
+func (h LkQueue) PushMsg(handleMsg module.HandlerMsg) {
 	switch handleMsg.ApiType {
 	case common.ApiModeMain:
 		mainHandleQueue.Push(handleMsg)
@@ -47,8 +47,8 @@ func (h LkQueue) GetNextMsg(queue *common.Queue) {
 		time.Sleep(time.Duration(2) * time.Second)
 		data, _ := queue.Pop()
 		if data != nil {
-			var msg = data.(component.HandlerMsg)
-			result, err := component.DoHandleMsg(msg)
+			var msg = data.(module.HandlerMsg)
+			result, err := module.DoHandleMsg(msg)
 			if err == nil {
 				log4go.Info("HandleNextMsg ok=========" + msg.Uid)
 			} else {

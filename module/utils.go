@@ -1,4 +1,4 @@
-package component
+package module
 
 import (
 	"github.com/alecthomas/log4go"

@@ -1,10 +1,10 @@
 package queue
 
-import "github.com/ganeryao/linking-go-socket/component"
+import "github.com/ganeryao/linking-go-socket/module"
 
 type (
 	LkQueue interface {
 		Init()
-		PushMsg(component.HandlerMsg)
+		PushMsg(module.HandlerMsg)
 	}
 )

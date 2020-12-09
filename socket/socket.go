@@ -3,9 +3,8 @@ package socket
 import (
 	"context"
 	"fmt"
-	"github.com/ganeryao/linking-go-socket/app"
-	"github.com/ganeryao/linking-go-socket/services"
-	"github.com/spf13/viper"
+	"github.com/ganeryao/linking-go-socket/linking"
+	"github.com/ganeryao/linking-go-socket/module"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/acceptor"
 	"github.com/topfreegames/pitaya/cluster"
@@ -14,30 +13,28 @@ import (
 	"strings"
 )
 
-func ConfigureBackend(config *viper.Viper) {
-	room := services.NewRoom(config)
-	pitaya.Register(room,
-		component.WithName(app.DefaultGroupName),
+func ConfigureBackend(c module.SelfComponent) {
+	pitaya.Register(c,
+		component.WithName(c.Group()),
 		component.WithNameFunc(strings.ToLower),
 	)
-
-	pitaya.RegisterRemote(room,
-		component.WithName(app.DefaultGroupName),
+	pitaya.RegisterRemote(c,
+		component.WithName(c.Group()),
 		component.WithNameFunc(strings.ToLower),
 	)
 }
 
-func ConfigureFrontend(port int, dictionary ...string) {
-	pitaya.Register(&services.Connector{},
-		component.WithName(app.DefaultFrontend),
+func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port int, dictionary ...string) {
+	pitaya.Register(c,
+		component.WithName(c.Group()),
 		component.WithNameFunc(strings.ToLower),
 	)
-	pitaya.RegisterRemote(&services.ConnectorRemote{},
-		component.WithName(app.DefaultFrontend+"_remote"),
+	pitaya.RegisterRemote(remote,
+		component.WithName(remote.Group()),
 	)
-	num := len(app.DefaultRoutes)
+	num := len(linking.GetRoutes())
 	for i := 0; i < num; i++ {
-		AddRoute(app.DefaultRoutes[i])
+		AddRoute(linking.GetRoutes()[i])
 	}
 	var dict = make(map[string]uint16, 0)
 	num = len(dictionary)

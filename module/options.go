@@ -1,8 +1,8 @@
-package component
+package module
 
 type (
 	options struct {
-		name     string              // component name
+		name     string              // module name
 		nameFunc func(string) string // rename handler name
 	}
 
@@ -10,7 +10,7 @@ type (
 	Option func(options *options)
 )
 
-// WithName used to rename component name
+// WithName used to rename module name
 func WithName(name string) Option {
 	return func(opt *options) {
 		opt.name = name

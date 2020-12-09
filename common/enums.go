@@ -6,14 +6,6 @@
  */
 package common
 
-var MainApiType = map[string]string{
-	"chat.msg": "ApiChatMsg",
-}
-
-var ThreadApiType = map[string]string{
-	"chat.msg": "ApiChatMsg",
-}
-
 type ApiProcessMode string
 
 const (
@@ -21,20 +13,3 @@ const (
 	ApiModeThread ApiProcessMode = "Thread"
 	ApiModeNone   ApiProcessMode = "None"
 )
-
-func ContainsApi(api string) (bool, ApiProcessMode) {
-	_, ok := MainApiType[api]
-	if ok {
-		return true, ApiModeMain
-	}
-	_, ok = ThreadApiType[api]
-	if ok {
-		return true, ApiModeThread
-	}
-	return false, ApiModeNone
-}
-
-func RetrieveApi(api string) (bool, string) {
-	fun, ok := MainApiType[api]
-	return ok, fun
-}
