@@ -44,7 +44,7 @@ func (h LkQueue) PushMsg(handleMsg module.HandlerMsg) {
 
 func (h LkQueue) GetNextMsg(queue *common.Queue) {
 	for {
-		time.Sleep(time.Duration(2) * time.Second)
+		time.Sleep(time.Duration(2) * time.Millisecond)
 		data, _ := queue.Pop()
 		if data != nil {
 			var msg = data.(module.HandlerMsg)
