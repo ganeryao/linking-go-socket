@@ -10,6 +10,7 @@ import (
 	"github.com/topfreegames/pitaya/cluster"
 	"github.com/topfreegames/pitaya/component"
 	"github.com/topfreegames/pitaya/route"
+	"net/http"
 	"strings"
 )
 
@@ -24,7 +25,7 @@ func ConfigureBackend(c module.SelfComponent) {
 	)
 }
 
-func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port int, dictionary ...string) {
+func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port int, httpPort int, dictionary ...string) {
 	pitaya.Register(c,
 		component.WithName(c.Group()),
 		component.WithNameFunc(strings.ToLower),
@@ -52,6 +53,16 @@ func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port
 	wsPort := fmt.Sprintf(":%d", port)
 	tcp := acceptor.NewWSAcceptor(wsPort)
 	pitaya.AddAcceptor(tcp)
+	hPort := fmt.Sprintf(":%d", httpPort)
+	go http.ListenAndServe(hPort, nil)
+}
+
+func ConfigureStandalone(port int, httpPort int) {
+	wsPort := fmt.Sprintf(":%d", port)
+	tcp := acceptor.NewWSAcceptor(wsPort)
+	pitaya.AddAcceptor(tcp)
+	wsHttpPort := fmt.Sprintf(":%d", httpPort)
+	go http.ListenAndServe(wsHttpPort, nil)
 }
 
 /**
