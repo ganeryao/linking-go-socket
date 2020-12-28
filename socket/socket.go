@@ -32,6 +32,7 @@ func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port
 	)
 	pitaya.RegisterRemote(remote,
 		component.WithName(remote.Group()),
+		component.WithNameFunc(strings.ToLower),
 	)
 	num := len(linking.GetRoutes())
 	for i := 0; i < num; i++ {
