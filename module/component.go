@@ -67,33 +67,26 @@ func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) erro
 		s := manager.GetSession(ctx)
 		_ = s.OnClose(func() {
 			logger.Error("Session Close uid : " + s.UID())
-			err := b.LeaveGroup(ctx, group, s.UID())
-			if err != nil {
-				logger.Error("Failed to leave group : " + err.Error())
-			}
+			b.LeaveGroup(ctx, group, s.UID())
 		})
 	}
 	return nil
 }
 
-func (b *SelfBase) LeaveGroup(ctx context.Context, group string, uid string) error {
+func (b *SelfBase) LeaveGroup(ctx context.Context, group string, uid string) {
 	logger := manager.GetLog(ctx)
 	// 1、用户从组中移除
 	err := pitaya.GroupRemoveMember(ctx, group, uid)
 	if err != nil {
 		logger.Error("Failed to leave group member: " + err.Error())
-		return err
 	}
-	return nil
 }
 
-func (b *SelfBase) ClearGroup(ctx context.Context, group string) error {
+func (b *SelfBase) ClearGroup(ctx context.Context, group string) {
 	logger := manager.GetLog(ctx)
 	// 1、清空组中成员
 	err := pitaya.GroupRemoveAll(ctx, group)
 	if err != nil {
 		logger.Error("Failed to clear group: " + err.Error())
-		return err
 	}
-	return nil
 }
