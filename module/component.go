@@ -2,6 +2,8 @@ package module
 
 import (
 	"context"
+	"github.com/ganeryao/linking-go-agile/protos"
+	"github.com/ganeryao/linking-go-socket/linking"
 	"github.com/ganeryao/linking-go-socket/manager"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/component"
@@ -12,6 +14,8 @@ import (
 type SelfComponent interface {
 	component.Component
 	Group() string
+	LeaveGroup(ctx context.Context, group string, uid string)
+	LeaveGroupRemote(ctx context.Context, request *protos.LRequest) (*protos.LResult, error)
 }
 
 // Base implements a default module for Component.
@@ -58,6 +62,16 @@ func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) erro
 			logger.Error("Failed to join group: " + err.Error())
 			return err
 		}
+	}
+	if linking.IsFrontend() {
+		s := manager.GetSession(ctx)
+		_ = s.OnClose(func() {
+			logger.Error("Session Close uid : " + s.UID())
+			err := b.LeaveGroup(ctx, group, s.UID())
+			if err != nil {
+				logger.Error("Failed to leave group : " + err.Error())
+			}
+		})
 	}
 	return nil
 }
