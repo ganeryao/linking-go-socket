@@ -38,7 +38,7 @@ func (b *SelfBase) InitGroup(conf *config.Config, group string) {
 /**
 绑定用户
 */
-func (b *SelfBase) BindUser(ctx context.Context, IsFrontend bool, group string, uid string) error {
+func (b *SelfBase) BindUser(ctx context.Context, uid string) error {
 	// 1、从ctx中获得session
 	s := manager.GetSession(ctx)
 	// 2、绑定session用户编号
