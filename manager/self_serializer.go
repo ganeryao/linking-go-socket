@@ -12,15 +12,17 @@ type SelfSerializer struct {
 	json     *json.Serializer
 }
 
+var ProtocolType string
+
 // NewSerializer returns a new Serializer.
-func NewSerializer() *SelfSerializer {
+func NewSerializer(protocolType string) *SelfSerializer {
+	ProtocolType = protocolType
 	return &SelfSerializer{protobuf: protobuf.NewSerializer(), json: json.NewSerializer()}
 }
 
 // Marshal returns the JSON encoding of v.
 func (s *SelfSerializer) Marshal(v interface{}) ([]byte, error) {
-	var protocolType = lkCommon.SelfRuntime.GetProtocolType()
-	switch protocolType {
+	switch ProtocolType {
 	case lkCommon.ProtocolProtobuf.String():
 		return s.protobuf.Marshal(v)
 	case lkCommon.ProtocolJson.String():
@@ -33,8 +35,7 @@ func (s *SelfSerializer) Marshal(v interface{}) ([]byte, error) {
 // Unmarshal parses the JSON-encoded data and stores the result
 // in the value pointed to by v.
 func (s *SelfSerializer) Unmarshal(data []byte, v interface{}) error {
-	var protocolType = lkCommon.SelfRuntime.GetProtocolType()
-	switch protocolType {
+	switch ProtocolType {
 	case lkCommon.ProtocolProtobuf.String():
 		return s.protobuf.Unmarshal(data, v)
 	case lkCommon.ProtocolJson.String():
@@ -46,8 +47,7 @@ func (s *SelfSerializer) Unmarshal(data []byte, v interface{}) error {
 
 // GetName returns the name of the serializer.
 func (s *SelfSerializer) GetName() string {
-	var protocolType = lkCommon.SelfRuntime.GetProtocolType()
-	switch protocolType {
+	switch ProtocolType {
 	case lkCommon.ProtocolProtobuf.String():
 		return "protos"
 	case lkCommon.ProtocolJson.String():
