@@ -12,6 +12,7 @@ import (
 
 // App is the base linking struct
 type App struct {
+	isFrontend  bool
 	frontend    string
 	config      *viper.Viper
 	configured  bool
@@ -32,6 +33,7 @@ var (
 
 // Configure configures the linking
 func Configure(
+	isFrontend bool,
 	frontend string,
 	clientRoute string,
 	routes []string,
@@ -42,6 +44,7 @@ func Configure(
 	if app.configured {
 		logger.Log.Warn("lk socket configured twice!")
 	}
+	app.isFrontend = isFrontend
 	app.frontend = frontend
 	app.clientRoute = clientRoute
 	app.routes = routes
@@ -49,6 +52,10 @@ func Configure(
 	app.queue = queue
 	app.configured = true
 	app.debug = debug
+}
+
+func IsFrontend() bool {
+	return app.isFrontend
 }
 
 func GetFrontend() string {
