@@ -42,7 +42,6 @@ func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) erro
 	// 1、从ctx中获得session
 	s := manager.GetSession(ctx)
 	// 2、绑定session用户编号
-	logger.Info("join group ==============" + uid)
 	err := s.Bind(ctx, uid)
 	if err != nil {
 		return pitaya.Error(err, "RH-000", map[string]string{"failed": "bind"})
@@ -50,15 +49,37 @@ func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) erro
 	// 3、判断用户是否已经在组中，如果不存在再加入
 	flag, err := pitaya.GroupContainsMember(ctx, group, uid)
 	if err != nil {
-		logger.Error("Failed to contains room member: " + err.Error())
+		logger.Error("Failed to contains group member: " + err.Error())
 		return err
 	}
 	if !flag {
 		err = pitaya.GroupAddMember(ctx, group, uid)
 		if err != nil {
-			logger.Error("Failed to join room: " + err.Error())
+			logger.Error("Failed to join group: " + err.Error())
 			return err
 		}
+	}
+	return nil
+}
+
+func (b *SelfBase) LeaveGroup(ctx context.Context, group string, uid string) error {
+	logger := manager.GetLog(ctx)
+	// 1、用户从组中移除
+	err := pitaya.GroupRemoveMember(ctx, group, uid)
+	if err != nil {
+		logger.Error("Failed to leave group member: " + err.Error())
+		return err
+	}
+	return nil
+}
+
+func (b *SelfBase) ClearGroup(ctx context.Context, group string) error {
+	logger := manager.GetLog(ctx)
+	// 1、清空组中成员
+	err := pitaya.GroupRemoveAll(ctx, group)
+	if err != nil {
+		logger.Error("Failed to clear group: " + err.Error())
+		return err
 	}
 	return nil
 }
