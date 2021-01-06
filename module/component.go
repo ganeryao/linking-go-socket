@@ -19,6 +19,11 @@ type SelfBase struct {
 	component.Base
 }
 
+type GroupUser struct {
+	Group string
+	Uid   string
+}
+
 func (b *SelfBase) InitGroup(conf *config.Config, group string) {
 	var gsi groups.GroupService
 	var err error
