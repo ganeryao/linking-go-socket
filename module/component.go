@@ -3,7 +3,6 @@ package module
 import (
 	"context"
 	"github.com/ganeryao/linking-go-agile/protos"
-	"github.com/ganeryao/linking-go-socket/linking"
 	"github.com/ganeryao/linking-go-socket/manager"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/component"
@@ -41,7 +40,7 @@ func (b *SelfBase) InitGroup(conf *config.Config, group string, clearUids bool) 
 	_ = pitaya.GroupCreate(context.Background(), group)
 }
 
-func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) error {
+func (b *SelfBase) JoinGroup(ctx context.Context, IsFrontend bool, group string, uid string) error {
 	logger := manager.GetLog(ctx)
 	// 1、从ctx中获得session
 	s := manager.GetSession(ctx)
@@ -63,7 +62,7 @@ func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) erro
 			return err
 		}
 	}
-	if linking.IsFrontend() {
+	if IsFrontend {
 		s := manager.GetSession(ctx)
 		_ = s.OnClose(func() {
 			logger.Error("Session Close uid : " + s.UID())
