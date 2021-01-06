@@ -2,7 +2,6 @@ package module
 
 import (
 	"context"
-	"github.com/ganeryao/linking-go-agile/protos"
 	"github.com/ganeryao/linking-go-socket/manager"
 	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/component"
@@ -13,8 +12,6 @@ import (
 type SelfComponent interface {
 	component.Component
 	Group() string
-	LeaveGroup(ctx context.Context, group string, uid string)
-	LeaveGroupRemote(ctx context.Context, request *protos.LRequest) (*protos.LResult, error)
 }
 
 // Base implements a default module for Component.
@@ -22,7 +19,7 @@ type SelfBase struct {
 	component.Base
 }
 
-func (b *SelfBase) InitGroup(conf *config.Config, group string, clearUids bool) {
+func (b *SelfBase) InitGroup(conf *config.Config, group string) {
 	var gsi groups.GroupService
 	var err error
 	if conf != nil {
@@ -33,15 +30,15 @@ func (b *SelfBase) InitGroup(conf *config.Config, group string, clearUids bool) 
 	if err != nil {
 		panic(err)
 	}
+	// 初始和创建组
 	pitaya.InitGroups(gsi)
-	if clearUids {
-		_ = pitaya.GroupRemoveAll(context.Background(), group)
-	}
 	_ = pitaya.GroupCreate(context.Background(), group)
 }
 
-func (b *SelfBase) JoinGroup(ctx context.Context, IsFrontend bool, group string, uid string) error {
-	logger := manager.GetLog(ctx)
+/**
+绑定用户
+*/
+func (b *SelfBase) BindUser(ctx context.Context, IsFrontend bool, group string, uid string) error {
 	// 1、从ctx中获得session
 	s := manager.GetSession(ctx)
 	// 2、绑定session用户编号
@@ -49,43 +46,54 @@ func (b *SelfBase) JoinGroup(ctx context.Context, IsFrontend bool, group string,
 	if err != nil {
 		return pitaya.Error(err, "RH-000", map[string]string{"failed": "bind"})
 	}
-	// 3、判断用户是否已经在组中，如果不存在再加入
+	return nil
+}
+
+/**
+加入组
+*/
+func (b *SelfBase) JoinGroup(ctx context.Context, group string, uid string) bool {
+	logger := manager.GetLog(ctx)
+	// 1、判断用户是否已经在组中，如果不存在再加入
 	flag, err := pitaya.GroupContainsMember(ctx, group, uid)
 	if err != nil {
 		logger.Error("Failed to contains group member: " + err.Error())
-		return err
+		return false
 	}
 	if !flag {
 		err = pitaya.GroupAddMember(ctx, group, uid)
 		if err != nil {
 			logger.Error("Failed to join group: " + err.Error())
-			return err
+			return false
 		}
 	}
-	if IsFrontend {
-		s := manager.GetSession(ctx)
-		_ = s.OnClose(func() {
-			logger.Error("Session Close uid : " + s.UID())
-			b.LeaveGroup(ctx, group, s.UID())
-		})
-	}
-	return nil
+	return true
 }
 
-func (b *SelfBase) LeaveGroup(ctx context.Context, group string, uid string) {
+/**
+离开组
+*/
+func (b *SelfBase) LeaveGroup(ctx context.Context, group string, uid string) bool {
 	logger := manager.GetLog(ctx)
 	// 1、用户从组中移除
 	err := pitaya.GroupRemoveMember(ctx, group, uid)
 	if err != nil {
 		logger.Error("Failed to leave group member: " + err.Error())
+		return false
 	}
+	return true
 }
 
-func (b *SelfBase) ClearGroup(ctx context.Context, group string) {
+/**
+清空组
+*/
+func (b *SelfBase) ClearGroup(ctx context.Context, group string) bool {
 	logger := manager.GetLog(ctx)
 	// 1、清空组中成员
 	err := pitaya.GroupRemoveAll(ctx, group)
 	if err != nil {
 		logger.Error("Failed to clear group: " + err.Error())
+		return false
 	}
+	return true
 }

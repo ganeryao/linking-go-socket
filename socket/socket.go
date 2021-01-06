@@ -14,26 +14,18 @@ import (
 	"strings"
 )
 
-func ConfigureBackend(c module.SelfComponent) {
-	pitaya.Register(c,
-		component.WithName(c.Group()),
-		component.WithNameFunc(strings.ToLower),
-	)
-	pitaya.RegisterRemote(c,
-		component.WithName(c.Group()),
-		component.WithNameFunc(strings.ToLower),
-	)
-}
-
-func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port int, httpPort int, dictionary ...string) {
-	pitaya.Register(c,
-		component.WithName(c.Group()),
+func InitComponent(local module.SelfComponent, remote module.SelfComponent) {
+	pitaya.Register(local,
+		component.WithName(local.Group()),
 		component.WithNameFunc(strings.ToLower),
 	)
 	pitaya.RegisterRemote(remote,
 		component.WithName(remote.Group()),
 		component.WithNameFunc(strings.ToLower),
 	)
+}
+
+func ConfigureFrontend(port int, httpPort int, dictionary ...string) {
 	num := len(linking.GetRoutes())
 	for i := 0; i < num; i++ {
 		AddRoute(linking.GetRoutes()[i])
@@ -51,14 +43,10 @@ func ConfigureFrontend(c module.SelfComponent, remote module.SelfComponent, port
 		fmt.Printf("error setting route dictionary %s\n", err.Error())
 		panic(err)
 	}
-	wsPort := fmt.Sprintf(":%d", port)
-	tcp := acceptor.NewWSAcceptor(wsPort)
-	pitaya.AddAcceptor(tcp)
-	hPort := fmt.Sprintf(":%d", httpPort)
-	go http.ListenAndServe(hPort, nil)
+	StartListen(port, httpPort)
 }
 
-func ConfigureStandalone(port int, httpPort int) {
+func StartListen(port int, httpPort int) {
 	wsPort := fmt.Sprintf(":%d", port)
 	tcp := acceptor.NewWSAcceptor(wsPort)
 	pitaya.AddAcceptor(tcp)

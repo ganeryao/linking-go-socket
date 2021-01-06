@@ -1,10 +1,12 @@
 package module
 
 import (
+	"context"
 	"github.com/alecthomas/log4go"
 	"github.com/ganeryao/linking-go-agile/common"
 	"github.com/ganeryao/linking-go-agile/errors"
 	"github.com/ganeryao/linking-go-agile/protos"
+	"github.com/topfreegames/pitaya"
 	"github.com/topfreegames/pitaya/util"
 	"reflect"
 )
@@ -36,4 +38,14 @@ func DoHandleMsg(msg HandlerMsg) (*protos.LResult, error) {
 		return ret.(*protos.LResult), nil
 	}
 	return common.ResultOk, nil
+}
+
+// SendRPC sends rpc
+func SendRPC(ctx context.Context, serverId string, route string, request *protos.LRequest) {
+	logger := pitaya.GetDefaultLoggerFromCtx(ctx)
+	ret := &protos.LResult{}
+	err := pitaya.RPCTo(ctx, serverId, route, ret, request)
+	if err != nil {
+		logger.Errorf("Failed to execute RPCTo %s - %s", route, err.Error())
+	}
 }
