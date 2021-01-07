@@ -3,6 +3,9 @@ package linking
 import (
 	"encoding/json"
 	"github.com/alecthomas/log4go"
+	"github.com/ganeryao/linking-go-agile/common"
+	"github.com/ganeryao/linking-go-agile/rocketmq"
+	"github.com/ganeryao/linking-go-agile/strs"
 	"github.com/ganeryao/linking-go-socket/module"
 	"github.com/ganeryao/linking-go-socket/queue"
 	"github.com/spf13/viper"
@@ -105,4 +108,12 @@ func SendUsersMsg(uids []string, v interface{}) error {
 		return err
 	}
 	return nil
+}
+
+func SendRocketMqMsg(name string, data interface{}, tag string, prop map[string]string) error {
+	body := common.ConvertJson(data)
+	id, _ := common.Snow.GetSnowflakeId()
+	key := strs.Int64ToStr(id)
+	_, err := rocketmq.PublishMsg(name, rocketmq.MqMsg{MessageBody: body, MessageKey: key, MessageTag: tag, Properties: prop})
+	return err
 }
