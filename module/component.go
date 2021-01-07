@@ -19,9 +19,10 @@ type SelfBase struct {
 	component.Base
 }
 
-type GroupUser struct {
+type GroupMsg struct {
 	Group string
 	Uid   string
+	Msg   string
 }
 
 func (b *SelfBase) InitGroup(conf *config.Config, group string) {

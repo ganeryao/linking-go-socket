@@ -115,5 +115,12 @@ func SendRocketMqMsg(name string, data interface{}, tag string, prop map[string]
 	id, _ := common.Snow.GetSnowflakeId()
 	key := strs.Int64ToStr(id)
 	_, err := rocketmq.PublishMsg(name, rocketmq.MqMsg{MessageBody: body, MessageKey: key, MessageTag: tag, Properties: prop})
+	if err != nil {
+		propStr := ""
+		if prop != nil {
+			propStr = common.ConvertJson(prop)
+		}
+		logger.Log.Errorf("SendRocketMqMsg error, name=%s, tag=%s, body=%s, prop=%s, Error=%s", name, tag, body, propStr, err.Error())
+	}
 	return err
 }
