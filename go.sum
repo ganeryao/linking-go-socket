@@ -46,6 +46,8 @@ github.com/ganeryao/linking-go-agile v0.0.0-20210106022731-68b48dbc3c54 h1:dMBtK
 github.com/ganeryao/linking-go-agile v0.0.0-20210106022731-68b48dbc3c54/go.mod h1:SOgxjAaGxoOjuoCgZYCTe/3AIAuNhgfPwdA7Zr5VCKw=
 github.com/ganeryao/linking-go-agile v0.0.0-20210106062356-442262d86dee h1:nP11XCe/iJAxFlaOTaiBhWYIhT73+bVIygtpSPK/IPA=
 github.com/ganeryao/linking-go-agile v0.0.0-20210106062356-442262d86dee/go.mod h1:SOgxjAaGxoOjuoCgZYCTe/3AIAuNhgfPwdA7Zr5VCKw=
+github.com/ganeryao/linking-go-agile v0.0.0-20210107085813-835c214b100f h1:02vxARaWXAwXvx8IEaGfQBI6lD8ObmVxGct9+uub/2Q=
+github.com/ganeryao/linking-go-agile v0.0.0-20210107085813-835c214b100f/go.mod h1:SOgxjAaGxoOjuoCgZYCTe/3AIAuNhgfPwdA7Zr5VCKw=
 github.com/ganeryao/linking-go-agile v1.0.9 h1:BoE/dcCbT4xlwgRBgsudIBXUYdCLj2xfPhG41Ppb9t8=
 github.com/ganeryao/linking-go-agile v1.0.9/go.mod h1:9IraQ2Iv3Oj/o4WM7aOqVZTuQklnYJlALrWMsJOvcvw=
 github.com/garyburd/redigo v1.6.0 h1:0VruCpn7yAIIu7pWVClQC8wxCJEcG3nyzpMSHKi1PQc=

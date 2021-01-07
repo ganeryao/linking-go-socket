@@ -25,7 +25,7 @@ type GroupMsg struct {
 	Msg   string
 }
 
-func (b *SelfBase) InitGroup(conf *config.Config, group string) {
+func (b *SelfBase) InitGroup(conf *config.Config) {
 	var gsi groups.GroupService
 	var err error
 	if conf != nil {
@@ -36,8 +36,12 @@ func (b *SelfBase) InitGroup(conf *config.Config, group string) {
 	if err != nil {
 		panic(err)
 	}
-	// 初始和创建组
+	// 初始组
 	pitaya.InitGroups(gsi)
+}
+
+func (b *SelfBase) CreateGroup(group string) {
+	// 创建组
 	_ = pitaya.GroupCreate(context.Background(), group)
 }
 
