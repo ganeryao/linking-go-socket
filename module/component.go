@@ -23,6 +23,7 @@ type GroupMsg struct {
 	Group string
 	Uid   string
 	Msg   string
+	Param interface{}
 }
 
 func (b *SelfBase) InitGroup(conf *config.Config) {
