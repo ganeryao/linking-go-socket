@@ -59,3 +59,41 @@ func (b *SelfBase) BindUser(ctx context.Context, uid string) error {
 	}
 	return nil
 }
+
+// SetSessionData sets the session data
+func (b *SelfBase) SetSessionOneData(ctx context.Context, key string, value interface{}) bool {
+	data := make(map[string]interface{})
+	data[key] = value
+	return b.SetSessionData(ctx, data)
+}
+
+// SetSessionData sets the session data
+func (b *SelfBase) SetSessionData(ctx context.Context, data map[string]interface{}) bool {
+	logger := pitaya.GetDefaultLoggerFromCtx(ctx)
+	s := pitaya.GetSessionFromCtx(ctx)
+	// 1、取出老数据
+	curData := s.GetData()
+	// 2、将新值赋予老数据
+	for k, v := range data {
+		curData[k] = v
+	}
+	err := s.SetData(curData)
+	if err != nil {
+		logger.Error("Failed to set session data")
+		logger.Error(err)
+		return false
+	}
+	err = s.PushToFront(ctx)
+	if err != nil {
+		logger.Error("Failed to PushToFront session data")
+		logger.Error(err)
+		return false
+	}
+	return true
+}
+
+// GetSessionData gets the session data
+func (b *SelfBase) GetSessionData(ctx context.Context, key string) interface{} {
+	s := pitaya.GetSessionFromCtx(ctx)
+	return s.Get(key)
+}
