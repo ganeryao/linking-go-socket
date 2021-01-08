@@ -23,7 +23,14 @@ type GroupMsg struct {
 	Group string
 	Uid   string
 	Msg   string
-	Param interface{}
+	Param map[string]interface{}
+}
+
+func (g *GroupMsg) GroupParam(key string, value interface{}) {
+	if g.Param == nil {
+		g.Param = make(map[string]interface{})
+	}
+	g.Param[key] = value
 }
 
 func (b *SelfBase) InitGroup(conf *config.Config) {
